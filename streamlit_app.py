@@ -8,6 +8,30 @@ from openpyxl.utils import get_column_letter
 
 st.set_page_config(page_title="招募日報自動化", page_icon="📋", layout="centered")
 
+# ============================================================
+# 密碼保護
+# ============================================================
+def check_password():
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+
+    if not st.session_state.authenticated:
+        st.title("🔒 招募日報自動化")
+        st.caption("請輸入密碼以繼續")
+        pwd = st.text_input("密碼", type="password")
+        if st.button("登入", use_container_width=True):
+            if pwd == st.secrets["APP_PASSWORD"]:
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("密碼錯誤，請再試一次")
+        return False
+    return True
+
+if not check_password():
+    st.stop()
+# ============================================================
+
 st.title("📋 招募日報自動化")
 st.caption("上傳招募報表，自動合併並產生 LINE 訊息")
 
